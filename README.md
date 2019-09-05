@@ -28,8 +28,8 @@ Root
             +-- dt: <float64>[1] {1.0}
             +-- step: <unit64>[1] {0}
             +-- stepOffset: <unit64>[1] {0}
-            +-- time: <float64>[1] {0.0}
-            +-- timeOffset: <float64>[1] {0.0}
+            +-- time: <float32>[1] {0.0}
+            +-- timeOffset: <float32>[1] {0.0}
             +-- timeUnitSI: <float64>[1] {1.0e-12}
                 /-- box
                  +-- boundary: <string>[3] {[periodic,periodic,periodic]}

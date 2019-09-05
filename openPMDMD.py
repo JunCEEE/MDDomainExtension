@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[10]:
+# In[24]:
 
 
 import openpmd_api as api
@@ -10,7 +10,7 @@ import datetime
 import numpy as np
 
 
-# In[11]:
+# In[25]:
 
 
 def createCrystal(nc, lc, una, ux, uy, uz):
@@ -36,7 +36,7 @@ def buildFcc(nc, lc):
     return createCrystal(nc, lc, una, ux, uy, uz)
 
 
-# In[12]:
+# In[26]:
 
 
 # data preparation
@@ -52,13 +52,13 @@ lc = [3.615]*3  # Cu
 position_1 = np.asarray(buildFcc(nc,lc))
 
 
-# In[13]:
+# In[27]:
 
 
 position_0.shape
 
 
-# In[14]:
+# In[41]:
 
 
 # data flushes into hdf5 file
@@ -71,7 +71,7 @@ dateNow = time.strftime('%Y-%m-%d %H:%M:%S %z', time.localtime())
 # openPMD standard
 series.set_author("Juncheng E <juncheng.e@xfel.eu>")
 series.set_openPMD("1.1.0")
-series.set_openPMD_extension(0)
+series.set_openPMD_extension(1)
 series.set_iteration_encoding(api.Iteration_Encoding.group_based)
 series.set_particles_path("particles")
 series.set_software("LAMMPS")
@@ -85,12 +85,10 @@ print("particles path: ", series.particles_path)
 print("date: ", series.date)
 
 curStep = series.iterations[0]
-curStep.set_time(0.0)        .set_time_unit_SI(1e-15
-)
-curStep.set_attribute("step",0)
-curStep.set_attribute("stepOffset",0)
-curStep.set_attribute("timeOffset",0)
-curStep.set_attribute("timeUnitSI",1.0)
+curStep.set_time(0.0)        .set_time_unit_SI(1e-15)
+curStep.set_attribute("step",np.uint64(0))
+curStep.set_attribute("stepOffset",np.uint64(0))
+curStep.set_attribute("timeOffset",np.float32(0))
 
 cu = curStep.particles["Cu"]
 d = api.Dataset(position_0[0].dtype, position_0[0].shape)
@@ -120,7 +118,7 @@ series.flush()
 del series
 
 
-# In[15]:
+# In[42]:
 
 
 import h5py
@@ -140,7 +138,7 @@ for i in curStep.items():
 
 # create ID
 cu = curStep['particles/Cu']
-ID = cu.create_dataset("id", (position_0.shape[1],1), dtype='i8', data=np.arange(1,position_0.shape[1]+1))
+ID = cu.create_dataset("id", (position_0.shape[1],1), dtype='u8', data=np.arange(1,position_0.shape[1]+1))
 
 # create group
 box = curStep.create_group("box")
@@ -148,7 +146,7 @@ observ = curStep.create_group("observables")
 
 # box group
 box = curStep["box"]
-box.attrs['dimension'] = 3
+box.attrs['dimension'] = np.uint64(3)
 box.attrs['boundary'] = ['periodic','periodic','periodic']
 box.attrs['edge'] = [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]]
 
@@ -161,9 +159,15 @@ vol = observ.create_dataset("volume", (1,), dtype='f', data=[10])
 vol.attrs["unitSI"] = 1.0e-30
 
 
-# In[16]:
+# In[43]:
 
 
 f.flush()
 f.close()
+
+
+# In[ ]:
+
+
+
 
