@@ -9,7 +9,7 @@
 `/-- dataset: <type>[dim1][dim2] {value}` *A dataset with a `[dim1 x dim2]` array and of type `<type>`. The value of the data is `{value}`.*
 
 ## Data structure example
-Example file: [](./dataMD.h5)
+Example file: [dataMD.h5](./dataMD.h5)
 
 ```
 Root
