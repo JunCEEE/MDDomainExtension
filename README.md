@@ -23,6 +23,7 @@ Root
  +-- interationFormat: <string>[] {/data/%T}
  +-- software: <string>[] {LAMMPS}
  +-- softwareVersion: <string>[] {7 Aug 2019}
+ +-- forceField: <string>[] {Cu_mishin1.eam.alloy}
       /-- data
            /-- 0
             +-- dt: <float64>[1] {1.0}
@@ -31,21 +32,24 @@ Root
             +-- time: <float32>[1] {0.0}
             +-- timeOffset: <float32>[1] {0.0}
             +-- timeUnitSI: <float64>[1] {1.0e-12}
-                /-- box
-                 +-- boundary: <string>[3] {[periodic,periodic,periodic]}
-                 +-- dimension: <unit64>[1] {3}
-                 +-- edge: <float64>[3][3] {[[1,0,0],[0,1,0],[0,0,1]]}
-                 +-- limit: <float64>[3][2] {[[0,300],[0,300],[0,300]]}
-                 +-- unitSI: <float64>[1] {1.0e-10}
-                /-- observables
-                 /-- temprerature: <float64>[1] {300}
-                  +-- unitSI: <float64>[1] {1.0} 
-                 /-- volume: <float64>[1] {27}
-                  +-- unitSI: <float64>[1] {1.0e-24}
+            +-- boxBoundary: <string>[3] {[periodic,periodic,periodic]}
+            +-- boxDimension: <unit64>[1] {3}
+            +-- boxEdge: <float64>[3][3] {[[1,0,0],[0,1,0],[0,0,1]]}
+            +-- boxLimit: <float64>[3][2] {[[0,300],[0,300],[0,300]]}
+            +-- boxUnitSI: <float64>[1] {1.0e-10}
                 /--  particles
                      /-- Cu
                       /-- id: <uint64>[72000]
                           /-- position
+                           +-- timeOffset: <float64>[1] {0.0}
+                           +-- unitDimension: <float64>[7] {[1,0,0,0,0,0,0]}
+                               /-- x: <float64>[72000]
+                                +-- unitSI: <float64>[1.0e-10]
+                               /-- y: <float64>[72000]
+                                +-- unitSI: <float64>[1.0e-10]
+                               /-- z: <float64>[72000]
+                                +-- unitSI: <float64>[1.0e-10]
+                          /-- velocity
                            +-- timeOffset: <float64>[1] {0.0}
                            +-- unitDimension: <float64>[7] {[1,0,0,0,0,0,0]}
                                /-- x: <float64>[72000]
@@ -66,4 +70,8 @@ https://nongnu.org/h5md/
 [de Buyl, Colberg and Hofling, H5MD: A structured, efficient, and portable file format for molecular data, Comp. Phys. Comm. 185(6), 1546-1553 (2014)](https://www.sciencedirect.com/science/article/pii/S0010465514000447)
 * Atomeye cfg standard 
 http://li.mit.edu/Archive/Graphics/A/#extended_CFG
+* Interatomic potentials (Force Fields)
+https://www.ctcms.nist.gov/potentials/
+https://en.wikipedia.org/wiki/Force_field_(chemistry)
+https://www.sciencedirect.com/science/article/pii/S1359028613000788
 
