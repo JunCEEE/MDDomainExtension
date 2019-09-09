@@ -9,6 +9,8 @@
 `/-- dataset: <type>[dim1][dim2] {value}` *A dataset with a `[dim1 x dim2]` array and of type `<type>`. The value of the data is `{value}`.*
 
 ## Data structure example
+This example is conforming to [openPMD standard](https://github.com/openPMD/openPMD-standard/blob/latest/STANDARD.md), and can be written with [openPMD-api](https://github.com/openPMD/openPMD-api) directly.
+
 Example file: [dataMD.h5](./dataMD.h5)
 
 ```
@@ -23,7 +25,8 @@ Root
  +-- interationFormat: <string>[] {/data/%T}
  +-- software: <string>[] {LAMMPS}
  +-- softwareVersion: <string>[] {7 Aug 2019}
- +-- forceField: <string>[] {Cu_mishin1.eam.alloy}
+ +-- forceField: <string>[] {eam/alloy}
+ +-- forceFieldParameter: <string>[] {pair_coeff * * Cu_mishin1.eam.alloy Cu}
       /-- data
            /-- 0
             +-- dt: <float64>[1] {1.0}
@@ -39,6 +42,83 @@ Root
             +-- boxUnitSI: <float64>[1] {1.0e-10}
                 /--  particles
                      /-- Cu
+                      /-- id: <uint64>[72000]
+                          /-- position
+                           +-- timeOffset: <float64>[1] {0.0}
+                           +-- unitDimension: <float64>[7] {[1,0,0,0,0,0,0]}
+                               /-- x: <float64>[72000]
+                                +-- unitSI: <float64>[1.0e-10]
+                               /-- y: <float64>[72000]
+                                +-- unitSI: <float64>[1.0e-10]
+                               /-- z: <float64>[72000]
+                                +-- unitSI: <float64>[1.0e-10]
+                          /-- velocity
+                           +-- timeOffset: <float64>[1] {0.0}
+                           +-- unitDimension: <float64>[7] {[1,0,0,0,0,0,0]}
+                               /-- x: <float64>[72000]
+                                +-- unitSI: <float64>[1.0e-10]
+                               /-- y: <float64>[72000]
+                                +-- unitSI: <float64>[1.0e-10]
+                               /-- z: <float64>[72000]
+                                +-- unitSI: <float64>[1.0e-10]
+```
+## Data structure extended example
+This extended example needs the definition of **Domain Extension** of openPMD to be written with [openPMD-api](https://github.com/openPMD/openPMD-api).
+
+```
+Root
+ +-- openPMD: <string>[] {1.1.0}
+ +-- openPMDextension: <unit64>[1] {2}
+ +-- author: <string>[] {Juncheng E <juncheng.e@xfel.eu>} 
+ +-- basePath: <string>[] {/data/}
+ +-- particlePath: <string>[] {particles/}
+ +-- date: <string>[] {2019-09-05 20:45:02 +0200}
+ +-- iterationEncoding: <string>[] {groupBased}
+ +-- interationFormat: <string>[] {/data/%T}
+ +-- software: <string>[] {LAMMPS}
+ +-- softwareVersion: <string>[] {7 Aug 2019}
+ +-- forceField: <string>[] {[[lj/cut 3.0],[eam/alloy]]}
+ +-- forceFieldParameter: <string>[] {[[pair_coeff * * 1 1],[pair_coeff 1 1 Cu_mishin1.eam.alloy Cu]]}
+      /-- data
+           /-- 0
+            +-- dt: <float64>[1] {1.0}
+            +-- step: <unit64>[1] {0}
+            +-- stepOffset: <unit64>[1] {0}
+            +-- time: <float32>[1] {0.0}
+            +-- timeOffset: <float32>[1] {0.0}
+            +-- timeUnitSI: <float64>[1] {1.0e-12}
+            +-- boxBoundary: <string>[3] {[periodic,periodic,periodic]}
+            +-- boxDimension: <unit64>[1] {3}
+            +-- boxEdge: <float64>[3][3] {[[1,0,0],[0,1,0],[0,0,1]]}
+            +-- boxLimit: <float64>[3][2] {[[0,300],[0,300],[0,300]]}
+            +-- boxUnitSI: <float64>[1] {1.0e-10}
+                /-- observables
+                 /-- temprerature: <float64>[1] {300}
+                  +-- unitSI: <float64>[1] {1.0} 
+                 /-- volume: <float64>[1] {27}
+                  +-- unitSI: <float64>[1] {1.0e-24}
+                /--  particles
+                     /-- Cu
+                      /-- id: <uint64>[72000]
+                          /-- position
+                           +-- timeOffset: <float64>[1] {0.0}
+                           +-- unitDimension: <float64>[7] {[1,0,0,0,0,0,0]}
+                               /-- x: <float64>[72000]
+                                +-- unitSI: <float64>[1.0e-10]
+                               /-- y: <float64>[72000]
+                                +-- unitSI: <float64>[1.0e-10]
+                               /-- z: <float64>[72000]
+                                +-- unitSI: <float64>[1.0e-10]
+                          /-- velocity
+                           +-- timeOffset: <float64>[1] {0.0}
+                           +-- unitDimension: <float64>[7] {[1,0,0,0,0,0,0]}
+                               /-- x: <float64>[72000]
+                                +-- unitSI: <float64>[1.0e-10]
+                               /-- y: <float64>[72000]
+                                +-- unitSI: <float64>[1.0e-10]
+                               /-- z: <float64>[72000]
+                                +-- unitSI: <float64>[1.0e-10]
+                     /-- C
                       /-- id: <uint64>[72000]
                           /-- position
                            +-- timeOffset: <float64>[1] {0.0}
