@@ -134,11 +134,12 @@ Root
             +-- time: <float32>[1] {0.0}
             +-- timeOffset: <float32>[1] {0.0}
             +-- timeUnitSI: <float64>[1] {1.0e-12}
-            +-- boxBoundary: <string>[3] {[periodic,periodic,periodic]}
-            +-- boxDimension: <unit64>[1] {3}
-            +-- boxEdge: <float64>[3][3] {[[1,0,0],[0,1,0],[0,0,1]]}
-            +-- boxLimit: <float64>[3][2] {[[0,300],[0,300],[0,300]]}
-            +-- boxUnitSI: <float64>[1] {1.0e-10}
+                /-- box
+                 +-- boundary: <string>[3] {[periodic,periodic,periodic]}
+                 +-- dimension: <unit64>[1] {3}
+                 +-- edge: <float64>[3][3] {[[1,0,0],[0,1,0],[0,0,1]]}
+                 +-- limit: <float64>[3][2] {[[0,300],[0,300],[0,300]]}
+                 +-- unitSI: <float64>[1] {1.0e-10}
                 /-- observables
                  /-- temprerature: <float64>[1] {300}
                   +-- unitSI: <float64>[1] {1.0} 
