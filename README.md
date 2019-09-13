@@ -82,7 +82,7 @@ Root
             +-- time: <float32>[1] {0.0}
             +-- timeOffset: <float32>[1] {0.0}
             +-- timeUnitSI: <float64>[1] {1.0e-12}
-            +-- boxBoundary: <string>[3] {[periodic,periodic,periodic]}
+            +-- boxBoundary: <string>[3] {["periodic","periodic","periodic"]}
             +-- boxDimension: <unit64>[1] {3}
             +-- boxEdge: <float64>[3][3] {[[1,0,0],[0,1,0],[0,0,1]]}
             +-- boxLimit: <float64>[3][2] {[[0,300],[0,300],[0,300]]}
@@ -124,8 +124,8 @@ Root
  +-- interationFormat: <string>[] {/data/%T}
  +-- software: <string>[] {LAMMPS}
  +-- softwareVersion: <string>[] {7 Aug 2019}
- +-- forceField: <string>[] {[[lj/cut 3.0],[eam/alloy]]}
- +-- forceFieldParameter: <string>[] {[[pair_coeff * * 1 1],[pair_coeff 1 1 Cu_mishin1.eam.alloy Cu]]}
+ +-- forceField: <string>[] {["lj/cut 3.0","eam/alloy"]}
+ +-- forceFieldParameter: <string>[] {["pair_coeff * * 1 1","pair_coeff 1 1 Cu_mishin1.eam.alloy Cu"]}
       /-- data
            /-- 0
             +-- dt: <float64>[1] {1.0}
@@ -135,7 +135,7 @@ Root
             +-- timeOffset: <float32>[1] {0.0}
             +-- timeUnitSI: <float64>[1] {1.0e-12}
                 /-- box
-                 +-- boundary: <string>[3] {[periodic,periodic,periodic]}
+                 +-- boundary: <string>[3] {["periodic","periodic","periodic"]}
                  +-- dimension: <unit64>[1] {3}
                  +-- edge: <float64>[3][3] {[[1,0,0],[0,1,0],[0,0,1]]}
                  +-- limit: <float64>[3][2] {[[0,300],[0,300],[0,300]]}

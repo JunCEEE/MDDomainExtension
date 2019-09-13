@@ -66,7 +66,7 @@ print (id.shape)
 
 # data flushes into hdf5 file
 series = api.Series(
-    "dataMD.h5",
+    "dataMD_extended.h5",
     api.Access_Type.create)
 # get date
 dateNow = time.strftime('%Y-%m-%d %H:%M:%S %z', time.localtime())
@@ -94,8 +94,8 @@ series.set_date(dateNow)
 series.set_iteration_encoding(api.Iteration_Encoding.group_based)
 series.set_software("LAMMPS")
 series.set_software_version("7 Aug 2019")
-series.set_attribute("forceField","eam/alloy")
-series.set_attribute("forceFieldParameter","pair_coeff * * Cu_mishin1.eam.alloy Cu")
+series.set_attribute("forceField",["lj/cut 3.0","eam/alloy"])
+series.set_attribute("forceFieldParameter",["pair_coeff * * 1 1","pair_coeff 1 1 Cu_mishin1.eam.alloy Cu"])
 
 curStep = series.iterations[0]
 curStep.set_time(0.0)        .set_time_unit_SI(1e-15)
@@ -179,4 +179,48 @@ cu["velocity"]["z"].store_chunk(velocity_1[2])
 
 series.flush()
 del series
+
+
+# In[10]:
+
+
+import h5py
+
+f = h5py.File('dataMD_extended.h5', 'r+')
+# print ("attributes:")
+# for i in f.attrs.items():
+#     print ("  ",i)
+# print ("groups:")
+# for i in f.keys():
+#     print ("  ",i)
+
+# get current step
+curStep = f['data/0']
+for i in curStep.items():
+    print (i)
+
+# create group
+box = curStep.create_group("box")
+observ = curStep.create_group("observables")
+
+# box group
+box = curStep["box"]
+box.attrs['dimension'] = np.uint64(3)
+box.attrs['boundary'] = ['periodic','periodic','periodic']
+box.attrs['edge'] = [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]]
+
+# observables
+observ = curStep["observables"]
+temp = observ.create_dataset("temperate", (1,), dtype='f',data=[300])
+temp = observ["temperate"]
+temp.attrs["unitSI"] = 1.0
+vol = observ.create_dataset("volume", (1,), dtype='f', data=[10])
+vol.attrs["unitSI"] = 1.0e-30
+
+
+# In[11]:
+
+
+f.flush()
+f.close()
 
