@@ -27,11 +27,10 @@ Root
  +-- softwareVersion: <string>[] {7 Aug 2019}
  +-- forceField: <string>[] {eam/alloy}
  +-- forceFieldParameter: <string>[] {pair_coeff * * Cu_mishin1.eam.alloy Cu}
+ +-- comment: <string>[] {"NPT, temperature was reduced by 100 K every 5000 steps."}
       /-- data
            /-- 0
             +-- dt: <float64>[1] {1.0}
-            +-- step: <unit64>[1] {0}
-            +-- stepOffset: <unit64>[1] {0}
             +-- time: <float32>[1] {0.0}
             +-- timeOffset: <float32>[1] {0.0}
             +-- timeUnitSI: <float64>[1] {1.0e-12}
@@ -74,11 +73,10 @@ Root
  +-- softwareVersion: <string>[] {7 Aug 2019}
  +-- forceField: <string>[] {eam/alloy}
  +-- forceFieldParameter: <string>[] {pair_coeff * * Cu_mishin1.eam.alloy Cu}
+ +-- comment: <string>[] {"NPT, temperature was reduced by 100 K every 5000 steps."}
       /-- data
            /-- 0
             +-- dt: <float64>[1] {1.0}
-            +-- step: <unit64>[1] {0}
-            +-- stepOffset: <unit64>[1] {0}
             +-- time: <float32>[1] {0.0}
             +-- timeOffset: <float32>[1] {0.0}
             +-- timeUnitSI: <float64>[1] {1.0e-12}
@@ -126,11 +124,10 @@ Root
  +-- softwareVersion: <string>[] {7 Aug 2019}
  +-- forceField: <string>[] {["lj/cut 3.0","eam/alloy"]}
  +-- forceFieldParameter: <string>[] {["pair_coeff * * 1 1","pair_coeff 1 1 Cu_mishin1.eam.alloy Cu"]}
+ +-- comment: <string>[] {"NPT, temperature was reduced by 100 K every 5000 steps."}
       /-- data
            /-- 0
             +-- dt: <float64>[1] {1.0}
-            +-- step: <unit64>[1] {0}
-            +-- stepOffset: <unit64>[1] {0}
             +-- time: <float32>[1] {0.0}
             +-- timeOffset: <float32>[1] {0.0}
             +-- timeUnitSI: <float64>[1] {1.0e-12}
