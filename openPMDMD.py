@@ -71,10 +71,6 @@ series = api.Series(
 # get date
 dateNow = time.strftime('%Y-%m-%d %H:%M:%S %z', time.localtime())
 
-
-# In[6]:
-
-
 # default series settings
 print("Default settings:")
 print("basePath: ", series.base_path)
@@ -82,7 +78,7 @@ print("openPMD version: ", series.openPMD)
 print("iteration format: ", series.iteration_format)
 
 
-# In[7]:
+# In[6]:
 
 
 # openPMD standard
@@ -94,21 +90,37 @@ series.set_date(dateNow)
 series.set_iteration_encoding(api.Iteration_Encoding.group_based)
 series.set_software("LAMMPS")
 series.set_software_version("7 Aug 2019")
-series.set_attribute("forceField","eam/alloy")
-series.set_attribute("forceFieldParameter","pair_coeff * * Cu_mishin1.eam.alloy Cu")
+series.set_attribute("forceField",["lj/cut 3.0","eam/alloy"])
+series.set_attribute("forceFieldParameter",["pair_coeff * * 1 1","pair_coeff 1 1 Cu_mishin1.eam.alloy Cu"])
+series.set_comment("NPT, temperature was reduced by 100 K every 5000 steps.")
 
 curStep = series.iterations[0]
 curStep.set_time(0.0)        .set_time_unit_SI(1e-15)
-curStep.set_attribute("step",np.uint64(0))
-curStep.set_attribute("stepOffset",np.uint64(0))
-curStep.set_attribute("timeOffset",np.float32(0))
 
+# particle type
 cu = curStep.particles["Cu"]
 
 # id data
 d = api.Dataset(id.dtype, id.shape)
 cu["id"][SCALAR].reset_dataset(d)
 cu["id"][SCALAR].store_chunk(id)
+
+
+# In[7]:
+
+
+# box data
+edge = np.array([[1.,0.,0.],[0.,1.,0.],[0.,0.,1.]])
+limit = np.array([[0.,300.],[0.,150.],[0.,180.]])
+cu["box"].set_attribute("dimension",np.uint32(3))
+cu["box"].set_attribute("boundary",["periodic","periodic","periodic"])
+d = api.Dataset(edge.dtype,edge.shape)
+cu["box"]["edge"].reset_dataset(d)
+cu["box"]["edge"].store_chunk(edge)
+d = api.Dataset(limit.dtype,limit.shape)
+cu["box"]["limit"].reset_dataset(d)
+cu["box"]["limit"].store_chunk(limit)
+cu["box"]["limit"].set_unit_SI(1.e-10)
 
 
 # In[8]:
