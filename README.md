@@ -49,6 +49,7 @@ Root
                     /-- position
                      +-- timeOffset: <float64>[1] {0.0}
                      +-- unitDimension: <float64>[7] {[1,0,0,0,0,0,0]}
+                     +-- coordinate: <string>[] {absolute}
                         /-- x: <float64>[108]
                          +-- unitSI: <float64>[1.0e-10]
                         /-- y: <float64>[108]
@@ -75,6 +76,7 @@ Root
                     /-- position
                      +-- timeOffset: <float64>[1] {0.0}
                      +-- unitDimension: <float64>[7] {[1,0,0,0,0,0,0]}
+                     +-- coordinate: <string>[] {absolute}
                         /-- x: <float64>[108]
                          +-- unitSI: <float64>[1.0e-10]
                         /-- y: <float64>[108]

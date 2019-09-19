@@ -127,6 +127,7 @@ cu["box"]["limit"].set_unit_SI(1.e-10)
 
 
 # position data
+cu["position"].set_attribute("coordinate","absolute")
 d = api.Dataset(position_0[0].dtype, position_0[0].shape)
 cu["position"]["x"].reset_dataset(d)
 cu["position"]["y"].reset_dataset(d)
