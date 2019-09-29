@@ -28,6 +28,8 @@ import openpmd_api as api
 from mendeleev import element
 import warnings
 
+SCALAR = api.Mesh_Record_Component.SCALAR
+
 warnings.simplefilter("ignore")
 
 def convertToOPMD(input_path):
@@ -139,14 +141,15 @@ def convertToOPMD(input_path):
             # particle id
             p_dict = dict()
             for z in uZ:
-                p_dict[element(int(z)).symbol] = [[],[],[],[]]
+                p_dict[element(int(z)).symbol] = [np.empty(0)]*3
+                p_dict[element(int(z)).symbol].append(np.empty(0,dtype='uint64'))
 
             for i_id, z in enumerate(Z):
                 # get element symbol
                 symbol = element(int(z)).symbol
                 for ax in range(3):
-                    p_dict[symbol][ax].append(r[i_id,ax].astype(np.float64))
-                p_dict[symbol][3].append(i_id+1)
+                    p_dict[symbol][ax] = np.append(p_dict[symbol][ax],r[i_id,ax].astype(np.float64))
+                p_dict[symbol][3] = np.append(p_dict[symbol][3], i_id+1)
             for z in uZ:
                 symbol = element(int(z)).symbol
                 particle = curStep.particles[symbol]
@@ -161,6 +164,9 @@ def convertToOPMD(input_path):
                 for i, axis in enumerate(particle["position"]):
                     particle["position"][axis].set_unit_SI(1.0)
                     particle["position"][axis].store_chunk(p_dict[symbol][i])
+                dShape = api.Dataset(p_dict[symbol][3].dtype, p_dict[symbol][3].shape)
+                particle["id"][SCALAR].reset_dataset(dShape)
+                particle["id"][SCALAR].store_chunk(p_dict[symbol][3])
                 series.flush()
             print(it)
 
