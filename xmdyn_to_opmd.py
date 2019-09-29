@@ -115,6 +115,15 @@ def convertToOPMD(input_path):
             warnings.warn(xmdyn_path+' does not exist in xmdyn_h5', Warning)
 
         t0 = 0
+
+        # get particle type mask
+        snp = 'snp_'+str(1).zfill(7)
+        Z = xmdyn_h5['data/'+snp]['Z']
+        uZ = np.sort(np.unique(Z))
+        type_masks = []
+        for z in uZ:
+            type_masks.append(Z[:] == z)
+
         for it in range(1, 3):
             # it += 1
             snp = 'snp_'+str(it).zfill(7)
@@ -132,18 +141,18 @@ def convertToOPMD(input_path):
                     'misc/time/'+' does not exist in xmdyn_h5', Warning)
 
             # convert position
-            Z = xmdyn_h5['data/'+snp]['Z']
+            # Z = xmdyn_h5['data/'+snp]['Z']
             r = xmdyn_h5['data/'+snp]['r']
-            uZ = np.sort(np.unique(Z))
+            # uZ = np.sort(np.unique(Z))
 
-            for z in uZ:
+            for i_Z, z in enumerate(uZ):
                 # get element symbol
                 particle = curStep.particles[element(int(z)).symbol]
                 particle["position"].set_attribute(
                     "coordinate", "absolute")
                 particle["position"].set_unit_dimension(
                     {api.Unit_Dimension.L: 1})
-                position = r[Z[:] == z, :]
+                position = r[type_masks[i_Z], :]
                 p_list = []
                 for ax in range(3):
                     p_list.append(position[:, ax].astype(np.float64))
