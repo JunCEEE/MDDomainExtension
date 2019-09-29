@@ -136,24 +136,31 @@ def convertToOPMD(input_path):
             r = xmdyn_h5['data/'+snp]['r']
             uZ = np.sort(np.unique(Z))
 
+            # particle id
+            p_dict = dict()
             for z in uZ:
+                p_dict[element(int(z)).symbol] = [[],[],[],[]]
+
+            for i_id, z in enumerate(Z):
                 # get element symbol
-                particle = curStep.particles[element(int(z)).symbol]
+                symbol = element(int(z)).symbol
+                for ax in range(3):
+                    p_dict[symbol][ax].append(r[i_id,ax].astype(np.float64))
+                p_dict[symbol][3].append(i_id+1)
+            for z in uZ:
+                symbol = element(int(z)).symbol
+                particle = curStep.particles[symbol]
                 particle["position"].set_attribute(
                     "coordinate", "absolute")
                 particle["position"].set_unit_dimension(
                     {api.Unit_Dimension.L: 1})
-                position = r[Z[:] == z, :]
-                p_list = []
-                for ax in range(3):
-                    p_list.append(position[:, ax].astype(np.float64))
-                dShape = api.Dataset(p_list[0].dtype, p_list[0].shape)
+                dShape = api.Dataset(p_dict[symbol][0].dtype, p_dict[symbol][0].shape)
                 particle["position"]["x"].reset_dataset(dShape)
                 particle["position"]["y"].reset_dataset(dShape)
                 particle["position"]["z"].reset_dataset(dShape)
                 for i, axis in enumerate(particle["position"]):
                     particle["position"][axis].set_unit_SI(1.0)
-                    particle["position"][axis].store_chunk(p_list[i])
+                    particle["position"][axis].store_chunk(p_dict[symbol][i])
                 series.flush()
             print(it)
 
