@@ -19,8 +19,10 @@
 #                                                                        #
 ##########################################################################
 
+#%%
 # initialize
 import os
+# os.chdir('/gpfs/exfel/data/user/juncheng/panoscProject/src/MDDomainExtension')
 from argparse import ArgumentParser
 import numpy as np
 import h5py
@@ -165,13 +167,35 @@ def convertToOPMD(input_path):
                         particle["position"][axis].set_unit_SI(1.0)
                         particle["position"][axis].store_chunk(p_list[i])
                     series.flush()
-                if args.debug:
-                    print(it,'/',len(xmdyn_h5['data/'].items()))
-                else:
-                    print(it)
+                # if args.debug:
+                #     print(it,'/',len(xmdyn_h5['data/'].items()))
+                # else:
+                print(it)
         print('number of snapshots:', it)
     del series
 
+def copyExtra(input_file):
+    output_file = os.path.splitext(input_file)[0]+'.opmd'+'.h5'
+    def try_copy(h5_in,h5_out,group_name):
+        try:
+            h5_in.copy(group_name, h5_out['/'])
+        # Some keys may not exist, e.g. if the input file comes from a non-simex wpg run.
+        except KeyError:
+            pass
+        except:
+            raise
+
+    with h5py.File(input_file, 'r') as xmdyn_h5:
+        with h5py.File(output_file, 'a') as opmd_h5:
+            try_copy(xmdyn_h5,opmd_h5,'history')
+            try_copy(xmdyn_h5,opmd_h5,'info')
+            try_copy(xmdyn_h5,opmd_h5,'misc')
+            try_copy(xmdyn_h5,opmd_h5,'params')
+            try_copy(xmdyn_h5,opmd_h5,'version')
+            opmd_h5.close()
+
+
+#%%
 if __name__ == "__main__":
 
     # Parse arguments.
@@ -185,3 +209,15 @@ if __name__ == "__main__":
 
     # Call the converter routine.
     convertToOPMD(args.input_file)
+    # Extra fields
+    copyExtra(args.input_file)
+#%%
+            
+    # Convert to SingFEL
+
+
+
+
+
+
+#%%
