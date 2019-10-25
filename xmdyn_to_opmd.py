@@ -22,7 +22,6 @@
 #%%
 # initialize
 import os
-os.chdir('/gpfs/exfel/data/user/juncheng/panoscProject/src/MDDomainExtension')
 from argparse import ArgumentParser
 import numpy as np
 import h5py
@@ -230,8 +229,7 @@ def copyFF(input_file):
                         mark = np.where(a_types == a_number)
                         opmd_ff = xmdyn_ff[mark]
                         opmd_it_p[a_name].create_dataset("ff", opmd_ff.shape, dtype='f',
-                                            data= opmd_ff, chunks=True,
-                                            compression="gzip")
+                                            data= opmd_ff)
             opmd_h5.flush()
             opmd_h5.close()
         xmdyn_h5.close()
@@ -241,7 +239,7 @@ def copyFF(input_file):
 if __name__ == "__main__":
 
     # Parse arguments.
-    parser = ArgumentParser(description="Convert XMDYN output to openPMD-conforming hdf5. [v0.1]")
+    parser = ArgumentParser(description="Convert XMDYN output to openPMD-conforming hdf5. [v1.0]")
     parser.add_argument("input_file", metavar="input_file",
                       help="name of the file to convert.")
     parser.add_argument('-d','--debug',action='store_true',
