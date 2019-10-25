@@ -22,7 +22,7 @@
 #%%
 # initialize
 import os
-# os.chdir('/gpfs/exfel/data/user/juncheng/panoscProject/src/MDDomainExtension')
+os.chdir('/gpfs/exfel/data/user/juncheng/panoscProject/src/MDDomainExtension')
 from argparse import ArgumentParser
 import numpy as np
 import h5py
@@ -194,6 +194,48 @@ def copyExtra(input_file):
             try_copy(xmdyn_h5,opmd_h5,'version')
             opmd_h5.close()
 
+def copyFF(input_file):
+    output_file = os.path.splitext(input_file)[0]+'.opmd'+'.h5'
+
+    with h5py.File(input_file, 'r') as xmdyn_h5:
+        with h5py.File(output_file, 'a') as opmd_h5:
+            it = 0
+            opmd_data = opmd_h5['data/']
+            for snp in xmdyn_h5['data/']:
+                if snp.strip()[:3] == 'snp':
+                    it += 1
+                    try: 
+                        opmd_it = opmd_data[str(it)]
+                        xmdyn_h5.copy('data/'+snp+'/halfQ', opmd_it)
+                        xmdyn_h5.copy('data/'+snp+'/Nph', opmd_it)
+                        xmdyn_h5.copy('data/'+snp+'/Sq_halfQ', opmd_it)
+                        xmdyn_h5.copy('data/'+snp+'/Sq_bound', opmd_it)
+                        xmdyn_h5.copy('data/'+snp+'/Sq_free', opmd_it)
+                    except (RuntimeError, KeyError):
+                        pass
+                    except:
+                        raise
+                    opmd_it_p = opmd_it['particles']
+                    n_type = len(opmd_it_p.items())
+                    a_types = np.zeros(n_type)
+                    for idx, a_name in enumerate(opmd_it_p):
+                        atom = element(a_name)
+                        a_number = atom.atomic_number
+                        a_types[idx] = a_number
+                    a_types = np.sort(a_types)
+                    for a_name in opmd_it_p:
+                        atom = element(a_name)
+                        a_number = atom.atomic_number
+                        xmdyn_ff = xmdyn_h5['data/'+snp+'/ff'][...]
+                        mark = np.where(a_types == a_number)
+                        opmd_ff = xmdyn_ff[mark]
+                        opmd_it_p[a_name].create_dataset("ff", opmd_ff.shape, dtype='f',
+                                            data= opmd_ff, chunks=True,
+                                            compression="gzip")
+            opmd_h5.flush()
+            opmd_h5.close()
+        xmdyn_h5.close()
+
 
 #%%
 if __name__ == "__main__":
@@ -211,13 +253,5 @@ if __name__ == "__main__":
     convertToOPMD(args.input_file)
     # Extra fields
     copyExtra(args.input_file)
-#%%
-            
-    # Convert to SingFEL
-
-
-
-
-
-
-#%%
+    # Scattering factor fields
+    copyFF(args.input_file)
