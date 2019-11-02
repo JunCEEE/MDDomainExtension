@@ -31,9 +31,13 @@ import warnings
 
 warnings.simplefilter("ignore")
 
-def convertToOPMD(input_path):
+def convertToOPMD(args):
+    input_path = args.input_file
     # output setting
-    output_path = os.path.splitext(input_path)[0]+'.opmd'+'.h5'
+    if args.ff:
+        output_path = os.path.splitext(input_path)[0]+'.opmd.ff'+'.h5'
+    else:
+        output_path = os.path.splitext(input_path)[0]+'.opmd'+'.h5'
     if os.path.isfile(output_path):
         overwrite = input(output_path+" existed, overwrite? [y/n]").strip()
         if (overwrite == "y"): 
@@ -174,7 +178,7 @@ def convertToOPMD(input_path):
     del series
 
 def copyExtra(input_file):
-    output_file = os.path.splitext(input_file)[0]+'.opmd'+'.h5'
+    output_file = os.path.splitext(input_file)[0]+'.opmd.ff'+'.h5'
     def try_copy(h5_in,h5_out,group_name):
         try:
             h5_in.copy(group_name, h5_out['/'])
@@ -194,7 +198,7 @@ def copyExtra(input_file):
             opmd_h5.close()
 
 def copyFF(input_file):
-    output_file = os.path.splitext(input_file)[0]+'.opmd'+'.h5'
+    output_file = os.path.splitext(input_file)[0]+'.opmd.ff'+'.h5'
 
     with h5py.File(input_file, 'r') as xmdyn_h5:
         with h5py.File(output_file, 'a') as opmd_h5:
@@ -239,17 +243,22 @@ def copyFF(input_file):
 if __name__ == "__main__":
 
     # Parse arguments.
-    parser = ArgumentParser(description="Convert XMDYN output to openPMD-conforming hdf5. [v1.0]")
+    parser = ArgumentParser(description="Convert XMDYN output to openPMD-conforming hdf5. [v1.1]")
     parser.add_argument("input_file", metavar="input_file",
                       help="name of the file to convert.")
-    parser.add_argument('-d','--debug',action='store_true',
-                      help="DEBUG mode")
+    parser.add_argument("-f","--ff", action="store_true",
+                      help="also copy ff and extra fields from XMDYN output")
+    #parser.add_argument('-d','--debug',action='store_true',
+                      #help="DEBUG mode")
     args = parser.parse_args()
     print(args)
 
     # Call the converter routine.
-    convertToOPMD(args.input_file)
-    # Extra fields
-    copyExtra(args.input_file)
-    # Scattering factor fields
-    copyFF(args.input_file)
+    convertToOPMD(args)
+    if args.ff:
+        # Extra fields
+        copyExtra(args.input_file)
+        # Scattering factor fields
+        copyFF(args.input_file)
+    else:
+        pass
